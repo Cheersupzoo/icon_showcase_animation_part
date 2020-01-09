@@ -41,27 +41,59 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorPalette.grey90,
-      body: SafeArea(
-        child: Stack(children: <Widget>[
-          Hero(
-            tag: widget.iconData.title,
-            child: Card(
-                margin: EdgeInsets.all(10),
-                elevation: 10.0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25.0)),
-                child: Stack(children: <Widget>[
-                  Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 500,
-                      child: SizedBox()),
-                ])),
-          ),
-          Hero(
-            tag: 'icon${widget.iconData.title}',
-            child: Card(
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pop(true);
+        return Future.value(false);
+      },
+      child: Scaffold(
+        backgroundColor: ColorPalette.grey90,
+        body: SafeArea(
+          child: Stack(children: <Widget>[
+            Hero(
+              tag: widget.iconData.title,
+              child: Card(
+                  margin: EdgeInsets.all(10),
+                  elevation: 10.0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.0)),
+                  child: Stack(children: <Widget>[
+                    Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 500,
+                        child: SizedBox()),
+                  ])),
+            ),
+            Hero(
+              tag: 'icon${widget.iconData.title}',
+              child: Card(
+                  margin: EdgeInsets.all(10),
+                  clipBehavior: Clip.antiAlias,
+                  elevation: 0.0,
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.0)),
+                  child: Stack(children: <Widget>[
+                    Positioned.fill(
+                        bottom: -90,
+                        right: -90,
+                        child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: Icon(
+                              widget.iconData.icon,
+                              size: 400,
+                              color: ColorPalette.grey30,
+                            ))),
+                    Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 500,
+                        child: Padding(
+                            padding:
+                                const EdgeInsets.only(left: 20.0, top: 20.0),
+                            child: SizedBox())),
+                  ])),
+            ),
+            Card(
                 margin: EdgeInsets.all(10),
                 clipBehavior: Clip.antiAlias,
                 elevation: 0.0,
@@ -69,86 +101,61 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25.0)),
                 child: Stack(children: <Widget>[
-                  Positioned.fill(
-                      bottom: -90,
-                      right: -90,
-                      child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: Icon(
-                            widget.iconData.icon,
-                            size: 400,
-                            color: ColorPalette.grey30,
-                          ))),
                   Container(
                       width: MediaQuery.of(context).size.width,
                       height: 500,
                       child: Padding(
-                          padding: const EdgeInsets.only(left: 20.0, top: 20.0),
-                          child: SizedBox())),
-                ])),
-          ),
-          Card(
-              margin: EdgeInsets.all(10),
-              clipBehavior: Clip.antiAlias,
-              elevation: 0.0,
-              color: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25.0)),
-              child: Stack(children: <Widget>[
-                Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 500,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0, top: 20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).pop(true);
-                              return Future.value(false);
-                            },
-                            child: Hero(
-                              tag: 'menuarrow',
-                              child: AnimatedIcon(
-                                icon: AnimatedIcons.menu_arrow,
-                                progress: _animationController,
+                        padding: const EdgeInsets.only(left: 20.0, top: 20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            InkWell(
+                              onTap: () {
+                                Navigator.of(context).pop(true);
+                                return Future.value(false);
+                              },
+                              child: Hero(
+                                tag: 'menuarrow',
+                                child: AnimatedIcon(
+                                  icon: AnimatedIcons.menu_arrow,
+                                  progress: _animationController,
+                                ),
                               ),
                             ),
-                          ),
-                          Hero(
-                            tag: 'title${widget.iconData.title}',
-                            flightShuttleBuilder: (
-                              BuildContext flightContext,
-                              Animation<double> animation,
-                              HeroFlightDirection flightDirection,
-                              BuildContext fromHeroContext,
-                              BuildContext toHeroContext,
-                            ) {
-                              return DestinationTitle(
-                                viewState:
-                                    flightDirection == HeroFlightDirection.push
-                                        ? ViewState.enlarge
-                                        : ViewState.shrink,
+                            Hero(
+                              tag: 'title${widget.iconData.title}',
+                              flightShuttleBuilder: (
+                                BuildContext flightContext,
+                                Animation<double> animation,
+                                HeroFlightDirection flightDirection,
+                                BuildContext fromHeroContext,
+                                BuildContext toHeroContext,
+                              ) {
+                                return DestinationTitle(
+                                  viewState: flightDirection ==
+                                          HeroFlightDirection.push
+                                      ? ViewState.enlarge
+                                      : ViewState.shrink,
+                                  smallFontSize: 20.0,
+                                  largeFontSize: 60.0,
+                                  title: widget.iconData.title,
+                                  isOverflow: true,
+                                );
+                              },
+                              child: DestinationTitle(
+                                title: widget.iconData.title,
+                                color: Colors.black87,
+                                viewState: ViewState.enlarged,
                                 smallFontSize: 20.0,
                                 largeFontSize: 60.0,
-                                title: widget.iconData.title,
-                                isOverflow: true,
-                              );
-                            },
-                            child: DestinationTitle(
-                              title: widget.iconData.title,
-                              color: Colors.black87,
-                              viewState: ViewState.enlarged,
-                              smallFontSize: 20.0,
-                              largeFontSize: 60.0,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )),
-              ])),
-        ]),
+                          ],
+                        ),
+                      )),
+                ])),
+          ]),
+        ),
       ),
     );
   }
